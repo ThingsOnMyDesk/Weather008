@@ -1,0 +1,20 @@
+CC= g++
+CFLAGS = -Wall -g
+
+WeatherEXE: Weather\ 006.0.o Quest.o FoodQuest.o LostGirl.o DiaperQuest.o BeachQuest1.o
+	$(CC) $(CFLAGS) -o WeatherEXE Weather\ 006.0.o Quest.o FoodQuest.o LostGirl.o DiaperQuest.o BeachQuest1.o
+
+Weather\ 006.0.o: Weather\ 006.0.cpp Quest.h FoodQuest.h LostGirl.h DiaperQuest.h BeachQuest1.h
+	$(CC) $(CFLAGS) -c Weather\ 006.0.cpp
+
+Quest.o: Quest.h
+
+FoodQuest.o: FoodQuest.h Quest.h
+
+LostGirl.o: LostGirl.h Quest.h
+
+DiaperQuest.o: DiaperQuest.h Quest.h
+
+BeachQuest1.o: BeachQuest1.h Quest.h
+
+
