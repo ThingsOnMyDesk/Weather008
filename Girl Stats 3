@@ -1,0 +1,70 @@
+Consider making a cpp file based on said stats
+
+Mary and other girl (Kayla) could be constant
+
+bool hasPenis = false;
+int penisSize = 0;
+
+bool likesCock;
+bool likesPussy;
+
+float calculateHeight();
+float height;
+String fromHeight(height);
+
+enum breastSize = {"B" "C" "D" "DD" "E"}
+
+string name;
+string setName();
+private void setIntro();
+string intro = "";
+
+enum Archetype = {"emo" "cowgirl" "tomboy" "cop" "nurse" "witch" "Muscular" "goth" }
+
+enum BodyType = {"Slim" "Extra slim" "Regular" "Thicc" }
+
+enum personality = {"Peppy" "submissive" "dominant" "Slutty" "Clingy" "Distant"}
+
+//i.e. if name can't be processed correctly, - Witch.
+//if name comes with special intro, add special intro.
+void regOverride();
+
+
+//Guarantees at least one girl, has penis, likes girl, likes cock, etc. (NOTE: SHould only affect the last girl
+static void FinalOverrideAndCleanUP(girls[]);
+
+
+
+
+float calculateHeight(){
+	//random height from 0 - 1 + 2 (inclusive);
+	//random add half = rand%2 != 0 ===== +0.5
+	repeat
+	add values
+
+//OR 4-8 /2
+
+}
+
+void setName(){
+	//already exists
+	
+	rand % fileSize
+	get line at value.
+
+
+}
+
+void setIntro(){
+	//scan for name/string
+	//comparable string in seprate array
+}
+
+void setWitch(){
+
+}
+
+void regOverride(){
+	setIntro();
+	setWitch();
+}
