@@ -11,6 +11,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
 #include "BeachQuest1.h" 
+#include "Girl.h"
 
 //g++ -o "Exe File Name" cppFile1 cppFile2;
 //    -o allows you to give executable file a special name as opposed to a.out
@@ -32,13 +33,16 @@ enum locations {town, forest};
 enum sublocations {shopKeeper, couple, Diaper, Hungry, Lost};
 vector <bool> availSubLocations = {true, true, true, true, true};
 //Bread, Sandwhich, Steak, sword.
-vector <bool> itemsPossesed = {false, false, false, false};
-vector <string> itemsAll = {"Bread", "Sandwhich", "Steak", "Sword"};
+vector <bool> itemsPossesed = {false, false, false, false, false};
+vector <string> itemsAll = {"Bread", "Sandwhich", "Steak", "Sword", "Panties"};
 
 int gold = 10;
 
-//bool URwearingDiaper = false;
-//int consecDaysInDiaper = 0;
+bool URwearingDiaper = false;
+int consecDaysInDiaper = 0;
+int timesWetDay = 0;
+int timesWetNight = 0;
+
 bool terminateGame = false;
 
 void setUpVariables();
@@ -57,6 +61,7 @@ void handleSleep();
 void handleMenu();
 void handleSave();
 void handleLoad();
+void resetGame();
 
 
 //Quest Started/ Finished will be left in until we finish lost girl quest.
@@ -89,10 +94,20 @@ void customReadFile(string fileName);
 	
 bool firstTimeMenu = true;
 
-int beachQuestStartingLocation = -1;
-int main(){
-	cout << "The following Quests are currently under maintenence.\n";
 
+
+int beachQuestStartingLocation = -1;
+
+bool resetGameVar = false;
+int main(){
+	
+	do{
+	resetGameVar = false;
+	terminateGame = false;
+	cout << "The following Quests are currently under maintenence.\n";
+	cout << "AJD: Recently been updating DQptr. May need to find/replace QuestStartFunction\n";
+	Girl Girl1;
+	
 	srand(time(NULL));
 	/*
 	QuestSubGen QSG;
@@ -105,7 +120,7 @@ int main(){
 	*/
 	
 	//While user has not terminated the game
-	while(!terminateGame){
+		while(terminateGame == false){
 		
 		displayWhatYouSeeBIG();
 		
@@ -113,14 +128,19 @@ int main(){
 		int terminateInt = getUserInputMAIN();
 		if(terminateInt == 1){
 			continue;
-			} else if(terminateInt== 6){
+			
+			//If we either exit the game, or reset the game leave the inner loop.
+			} else if(terminateInt== 6 || terminateInt ==55){
 			break;
 			}
 			
 		questChecker();
 		
-
-	}
+		terminateGame = false;
+		cout << "AJD DEBUG: Made it to the end of loop. If it sill doesn't loop, Terminate Game = true;\n"; 
+		}
+	
+	}while(resetGameVar == true && terminateGame == false);
 	
 	return 0;
 }
@@ -273,7 +293,7 @@ void handleGoTo(){
 }
 
 void handleSleep(){
-	if(DQptr->currentlyInDiaperDQ == true){
+	if(URwearingDiaper == true){
 		if(oddsOfWetting <= 0){
 		oddsOfWetting = 1;
 		}
@@ -339,7 +359,7 @@ int getUserInputMAIN(){
 				cout << "8. Menu\n";
 				cout << "9. Save\n";
 				cout << "10.Load\n";
-				
+				cout << "55. Reset\n";
 				
 				
 				cout << "11.Return to main functions\n";
@@ -359,6 +379,12 @@ int getUserInputMAIN(){
 					break;
 					case 10:
 					handleLoad();
+					break;
+					case 55:
+					resetGame();
+					terminateGame = false;
+					return 55;
+					break;
 					case 11:
 					break;
 					}
@@ -531,7 +557,7 @@ void handleInteractBIG(){
 		case 1:{
 			//Store
 			cout << "You arrive at the shop. You have " << gold << " gold. What would you like to buy.\n";
-			cout << "1. Bread 3 Gold\n2. Grilled Cheese 5 Gold \n3. Steak 10 Gold\n4.Sword 100 Gold\n5. Leave\n";
+			cout << "1. Bread 3 Gold\n2. Grilled Cheese 5 Gold \n3. Steak 10 Gold\n4.Sword 100 Gold\n5. Frilly Panties 15 Gold\n6. Leave\n";
 			
 			//int x;
 			cin >> x;
@@ -569,6 +595,15 @@ void handleInteractBIG(){
 					cout << "This item is too expensive\n";	
 					}
 				break;
+					case 5:
+					if(gold >= 15){
+					itemsPossesed.at(4) = true;
+					gold -= 15;
+					//cout << "AJD: You bought the panties. Inventory may not be updated. See HandleInteractBig()\n";
+					} else {
+					cout << "This item is too expensive\n";	
+					}
+				break;
 				}
 			break;
 		}
@@ -584,7 +619,8 @@ void handleInteractBIG(){
 						cout << "\"Very well, same rules as before. You have to go seven days in your diaper.\"\n";
 						cout << "She puts you in a diaper\n";
 					
-						DQptr->restartDiaperQuest();
+						DQptr->restartDiaperQuest(URwearingDiaper);
+						URwearingDiaper = true;
 						girlsInParty.at(1) =DQptr->getMaryInPartyDQ();
 						/*
 						consecDaysInDiaper = -2;
@@ -611,6 +647,8 @@ void handleInteractBIG(){
 						cout <<"your diaper removed is when she removes it, and only for the sole purpose of changing\n";
 						
 						DQptr->startQuest();
+						
+						URwearingDiaper = true;
 						girlsInParty.at(1) =DQptr->getMaryInPartyDQ();
 						
 	
@@ -631,6 +669,7 @@ void handleInteractBIG(){
 						cout << "[Mary] has joined your party\n";
 						
 						DQptr->startQuest();
+							URwearingDiaper = true;
 						girlsInParty.at(1) =DQptr->getMaryInPartyDQ();
 						/*
 						URwearingDiaper = true;
@@ -687,7 +726,7 @@ void handleInteractBIG(){
 									//getFoodConditions.at(1) = true;
 									//QuestStarted();
 									FQptr->startQuest();
-									if(FQptr->checkBJHungryGirl(girlsInParty.at(0), DQptr->currentlyInDiaperDQ)){
+									if(FQptr->checkBJHungryGirl(girlsInParty.at(0), URwearingDiaper)){
 									break;
 								}
 								
@@ -705,7 +744,7 @@ void handleInteractBIG(){
 									//getFoodConditions.at(1) = true;
 								
 									FQptr->startQuest();
-									if(FQptr->checkBJHungryGirl(girlsInParty.at(0), DQptr->currentlyInDiaperDQ)){
+									if(FQptr->checkBJHungryGirl(girlsInParty.at(0), URwearingDiaper)){
 									break;
 								}
 							}else{
@@ -713,7 +752,7 @@ void handleInteractBIG(){
 							}
 				}else if (FQptr->getQuestProgress() == true){
 							cout << "\"Did you get any food? You can get some at the store in town.\"\n";
-							if(FQptr->checkBJHungryGirl(girlsInParty.at(0), DQptr->currentlyInDiaperDQ)){
+							if(FQptr->checkBJHungryGirl(girlsInParty.at(0), URwearingDiaper)){
 									break;
 								}
 				}
@@ -792,7 +831,7 @@ void handleInteractBIG(){
 			string fileNameA = DIALOGUE_PATH + "Beach/Beach Dialogue 1";
 			customReadFile(fileNameA);
 			vector<string> options;
-			bool inDiaper = DQptr->currentlyInDiaperDQ;
+			bool inDiaper = URwearingDiaper;
 			int choiceA;
 			if(inDiaper){
 				fileNameA = DIALOGUE_PATH + "Beach/BDialogue2";
@@ -805,10 +844,10 @@ void handleInteractBIG(){
 							cout << "AJD error: HandleInteractionBig: Pseudo virtual function below. You should rename.\n";
 						}
 						//DQptr->abandonQuest();
-						DQptr->giveUpDiaperQuest();
+						DQptr->giveUpDiaperQuest(URwearingDiaper);
 						cout << "You will not be able to find Mary's friend without Mary.\n\n";
 						BQ1ptr->abandonQuest();
-							
+							URwearingDiaper = false;
 					}else if(choiceA == 2){
 						fileNameA = DIALOGUE_PATH + "Beach/BD3MarysFriend";
 						customReadFile(fileNameA);
@@ -857,7 +896,7 @@ void foodHelperFunction(){
 						//return 0;
 					} else if (choosableItems.at(x) == "Sandwhich"){
 						cout << "She is very thankful. She wants to give you a special reward.\n";
-						if(DQptr->currentlyInDiaperDQ == true){
+						if(URwearingDiaper == true){
 								cout << "She pulls down your pants. \n\"Are you wearing a diaper?\"\n...\n";
 								cout << "\"Look, thanks for the sandwhich but I'm going to get going.\"\n\n";
 						}else{
@@ -868,7 +907,7 @@ void foodHelperFunction(){
 							//return 1;
 					} else if (choosableItems.at(x) == "Steak"){
 						cout << "She is extremely grateful. She wants to give you a special reward\n";
-						if(DQptr->currentlyInDiaperDQ == true){
+						if(URwearingDiaper == true){
 								cout << "She pulls down your pants. \n\"Are you wearing a diaper?\"\n...\n\"Oh well whatever\"\n";
 								cout << "Do you accept the BJ? \n\n1. Yes \n2. No\n";
 								cin >> x;
@@ -884,10 +923,11 @@ void foodHelperFunction(){
 								cin >> x;
 										if (x == 1){
 											//DQptr->failQuest();
-											DQptr->restartDiaperQuest();
+											DQptr->restartDiaperQuest(URwearingDiaper);
+											URwearingDiaper = true;
 										} else {
 											
-											DQptr->currentlyInDiaperDQ = false;
+											URwearingDiaper= false;
 											cout << "[Mary] has left your party.\n";
 										}
 									}else{}
@@ -943,16 +983,18 @@ void questChecker(){
 						cout << "She angrily SMACKS you in the balls\n";
 						cout << "\"I EXPLICITLY TOLD YOU, UNDER NO CIRCUMSTANCES, DO YOU REMOVE YOUR DIAPER!\"\n";
 						
-						DQptr->giveUpDiaperQuest();
+						DQptr->giveUpDiaperQuest(URwearingDiaper);
 						cout << "Would you like to restart?\n\n1. Yes \n2. No\n";
 										//consecDaysInDiaper = -2;
 								cin >> x;
 										if (x == 1){
-											DQptr->restartDiaperQuest();
+											DQptr->restartDiaperQuest(URwearingDiaper);
+											URwearingDiaper = true;
 										
 										} else {
-											DQptr->giveUpDiaperQuest();
+											DQptr->giveUpDiaperQuest(URwearingDiaper);
 											cout << "[Mary] has left your party.\n";
+											URwearingDiaper = false;
 										}
 			}else{
 				cout << "You passed my test. Good job. One more day.\n";
@@ -967,6 +1009,7 @@ void questChecker(){
 			cout << "[Mary] removes your diaper and gives you a sword.\n";
 			itemsPossesed.at(3) = true;
 			cout << "[Mary] has left your party. (NOTE: this has NOT been programemd)\n";
+			URwearingDiaper = false;
 		} else {
 				//cout << "AJD TEST: Nothing passed, relevant variables are: \n";
 		}
@@ -1165,6 +1208,69 @@ void handleLoad(){
 	 cout << "AJD: Load complete.";
 	 
 	}
+	
+void resetGame(){
+	
+DIALOGUE_PATH = "/home/pi/Documents/Actually Programmed Software/Weather Everything/Weather Code/V 006/Dialogue/";
+
+HGInParty = false;
+MaryInPartyMain = false;
+
+overrideDisplayWhatBig1 = false;
+overrideDisplaySubLoc = -1;
+
+oddsOfWetting = 6;
+
+ 
+//enum locations {town, forest};
+//enum sublocations {shopKeeper, couple, Diaper, Hungry, Lost};
+availSubLocations = {true, true, true, true, true};
+//Bread, Sandwhich, Steak, sword.
+itemsPossesed = {false, false, false, false, false};
+itemsAll = {"Bread", "Sandwhich", "Steak", "Sword", "Panties"};
+
+int gold = 10;
+
+ URwearingDiaper = false;
+ consecDaysInDiaper = 0;
+ timesWetDay = 0;
+ timesWetNight = 0;
+
+ terminateGame = false;
+
+
+
+
+ currentSubLocation = 0;
+ currentBroadLocation = 0;
+
+
+
+
+//Quest Started/ Finished will be left in until we finish lost girl quest.
+/*
+	Quest Q;
+	Quest* Qptr = &Q;
+	//Qptr->testLink();
+	FoodQuest FQ;
+	FoodQuest* FQptr = &FQ;
+	DiaperQuest DQ;
+	DiaperQuest* DQptr = &DQ;
+	LostGirl LG;
+	LostGirl* LGptr = &LG;
+	BeachQuest1 BQ1;
+	BeachQuest1* BQ1ptr = &BQ1;
+	* */
+	FULL_LIST_OF_QUESTS = {FQptr, DQptr, LGptr};
+	girlsInParty = {HGInParty, MaryInPartyMain};
+	
+firstTimeMenu = true;
+
+
+
+beachQuestStartingLocation = -1;
+resetGameVar = true;
+}
 
 
 
