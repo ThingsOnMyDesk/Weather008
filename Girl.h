@@ -24,13 +24,18 @@ using namespace std;
 		enum personality {Peppy, submissive, dominant, Slutty, Clingy, Distant};
 		//vector<string> =
 		
-		
+		string strBS;
+		string strBT;
+		int feet;
+		int inches;
+		string type;
 		
 		//Uses ints b/c in inches
 		//string calculateSize(int);
 		string fromHeight(int);
 		void setName();
 		void setIntro();
+		void introduceSelf();
 		
 		//i.e. if name can't be processed correctly, - Witch.
 		//if name comes with special intro, add special intro.
@@ -42,7 +47,12 @@ using namespace std;
 		static void FinalOverrideAndCleanUP(Girl[]);
 		string getName();
 		string getStringHeight();
-		
+		int getHeight();
+		string getBreastSize();
+		//string getType();
+		int getSexualityExternal();
+		string getType();
+		void reset();
 		//void setEnum(enum &e);
 		
 	};
