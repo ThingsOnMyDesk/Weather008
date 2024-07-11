@@ -51,7 +51,7 @@ bool flipValue(bool b);
 int currentSubLocation = 0;
 int currentBroadLocation = 0;
 
-int getUserInputMAIN();
+int getUserInputMAIN(int q);
 
 void displayBroadLocation();
 void handleExplore();
@@ -125,7 +125,7 @@ int main(){
 		displayWhatYouSeeBIG();
 		
 		//guiMain gets input. If 1 repeat location
-		int terminateInt = getUserInputMAIN();
+		int terminateInt = getUserInputMAIN(0);
 		if(terminateInt == 1){
 			continue;
 			
@@ -321,19 +321,33 @@ void handleSleep(){
 	}
 }
 
-int getUserInputMAIN(){
+int getUserInputMAIN(int q){
 	cout << "What would you like to do?\n\n";
 	
 	if(firstTimeMenu == true){
 			cout << "All options are available at all times (May or may not be implemented)\nOnly some are shown to save real estate.\n\n";
 			firstTimeMenu = false;
 	}
+	
+	if(q == 0){
 	cout << "1. Where am I?\n";
 	cout << "2. Explore\n";
 	cout << "3. Go To\n";
 	cout << "4. Interact\n";
 	cout << "5. More\n";
 	cout << "6. Exit Game\n";
+	}else if(q== 1){
+		cout << "7. Sleep\n";
+				cout << "8. Menu\n";
+				cout << "9. Save\n";
+				cout << "10.Load\n";
+				cout << "55. Reset\n";
+				
+				
+				cout << "5. More Options\n";
+	}else{
+		cout << "AJD CRITICAL ERROR: FIX IF ELSE STATEMENT IN \'getUserInputMain\'.\n";
+		}
 	
 	int x = 0;
 	cin >> x;
@@ -355,52 +369,42 @@ int getUserInputMAIN(){
 				handleInteractBIG();
 			break;
 			case 5: 
-				cout << "7. Sleep\n";
-				cout << "8. Menu\n";
-				cout << "9. Save\n";
-				cout << "10.Load\n";
-				cout << "55. Reset\n";
+			if(q == 1){
+			q = 0;	
+			}else{
+			q=1;
+			}
+			return getUserInputMAIN(q);
+			break;
 				
-				
-				cout << "11.Return to main functions\n";
-				int y;
-				cout << "\n";
-				cin >> y;
-				
-				switch(y){
-					case 7:
-					handleSleep();
-					break;
-					case 8:
-					handleMenu();
-					break;
-					case 9:
-					handleSave();
-					break;
-					case 10:
-					handleLoad();
-					break;
-					case 55:
-					resetGame();
-					terminateGame = false;
-					return 55;
-					break;
-					case 11:
-					break;
-					}
+			case 7:
+			handleSleep();
+			break;
+			case 8:
+			handleMenu();
+			break;
+			case 9:
+			handleSave();
+			break;
+			case 10:
+			handleLoad();
+			break;
+			case 55:
+			resetGame();
+			terminateGame = false;
+			return 55;
+			break;
+			case 11:
+			break;
+					
 				
 			break;
 			case 6: 
 				terminateGame = true;
 				return 6;
 			break;
-			case 7:
-				handleSleep();
-				break;
-			case 8:
-				handleMenu();
-
-				break;
+			
+		
 			return-2;
 		}
 		cout << "\n";
